@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FOLIO·NEWS – Headlines</title>
+<style>
+  :root{
+    --paper:#F5F1E8;
+    --ink:#14253F;
+    --ink-soft:#6B6255;
+    --ink-faint:#8C8474;
+    --rule:#C7BFA9;
+    --rule-strong:#14253F;
+    --flag:#C8632A;
+    --flag-ink:#FBF3E7;
+    --box-navy:#14253F;
+    --box-navy-ink:#F5F1E8;
+    --font-display:Georgia,"Iowan Old Style","Times New Roman",Times,serif;
+    --font-sans:"Satoshi","General Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  }
+  /* Bewusst einthemig: eine Zeitungsseite hat kein "Dark Mode"-Gegenstück. */
+
+  *{box-sizing:border-box;}
+  a{color:inherit;text-decoration:none;}
+  .wx-root{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    padding:0 0 60px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wx-wrap{max-width:1180px;margin:0 auto;padding:0 26px;}
+
+  /* ================= MASTHEAD ================= */
+  .wx-back-link{display:inline-block;margin:18px 0 0;font-family:var(--font-sans);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);}
+  .wx-back-link:hover{color:var(--flag);}
+  .wx-masthead{border-bottom:1px solid var(--rule);padding:34px 0 0;margin-bottom:30px;}
+  .wx-nameplate{text-align:center;font-family:var(--font-display);font-weight:700;font-size:44px;letter-spacing:.02em;color:var(--ink);margin:0;}
+  .wx-nameplate .dot{color:var(--flag);padding:0 10px;}
+  .wx-tagline{text-align:center;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-soft);margin:6px 0 18px;}
+  .wx-dateline{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--rule-strong);border-bottom:3px solid var(--rule-strong);padding:9px 0;font-size:12px;color:var(--ink-soft);}
+  .wx-dateline b{color:var(--ink);font-weight:700;}
+  .wx-dateline .mid{font-family:var(--font-display);font-style:italic;font-size:13px;color:var(--ink);}
+  .wx-dateline .ed{font-weight:700;color:var(--flag);letter-spacing:.03em;}
+
+  /* ================= LEAD + RAIL ================= */
+  .wx-top{display:grid;grid-template-columns:2fr 1fr;gap:44px;margin-bottom:8px;}
+  @media (max-width:940px){ .wx-top{grid-template-columns:1fr;gap:30px;} }
+  /* Grid-Items haben von Haus aus min-width:auto — die Spalte wird dann nie schmaler als der
+     breiteste Inhalt und sprengt auf dem iPhone das Raster (Player ragte rechts heraus). */
+  .wx-top > *{min-width:0;}
+  .wx-top aside{display:flex;flex-direction:column;}
+
+  .wx-kicker{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--flag);margin-bottom:8px;display:block;}
+
+  /* Ganzer Leitartikel (Ueberschrift+Text) ist EIN Link — kein separater "Quelle"-Link mehr noetig */
+  a.wx-lead-link{display:block;color:inherit;}
+  a.wx-lead-link:hover h1{color:var(--flag);}
+  .wx-lead h1{font-family:var(--font-display);font-weight:700;font-size:34px;line-height:1.12;margin:0 0 12px;text-wrap:balance;color:var(--ink);}
+  .wx-lead .dek{font-family:var(--font-display);font-style:italic;font-size:17px;line-height:1.4;color:var(--ink-soft);margin:0 0 18px;padding-bottom:18px;border-bottom:1px solid var(--rule);}
+  .wx-lead .body{columns:2;column-gap:28px;column-rule:1px solid var(--rule);font-size:14.5px;line-height:1.6;color:var(--ink);}
+  @media (max-width:700px){ .wx-lead .body{columns:1;} }
+  .wx-lead .body p{margin:0 0 14px;}
+  .wx-lead .dropcap{float:left;font-family:var(--font-display);font-weight:700;font-size:58px;line-height:.72;padding:5px 7px 0 0;color:var(--ink);}
+  .wx-byline{margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);}
+
+  /* ---- "Am Rande": mehrere kurze Meldungen, fuellen die Flaeche unter dem Leitartikel ---- */
+  .wx-hl-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:6px;}
+  @media (max-width:900px){ .wx-hl-row{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .wx-hl-row{grid-template-columns:1fr;} }
+  a.wx-hl-card{display:block;}
+  a.wx-hl-card:hover h3{color:var(--flag);}
+  .wx-hl-card h3{font-family:var(--font-display);font-weight:700;font-size:15.5px;line-height:1.28;margin:0 0 6px;color:var(--ink);}
+  .wx-hl-card p{font-size:12px;line-height:1.48;color:var(--ink-soft);margin:0 0 6px;}
+  .wx-hl-card .src{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);}
+
+  /* ---- Zweite Meldung unter den Kaesten ---- */
+  .wx-lead2{margin-top:24px;padding-top:22px;border-top:1px solid var(--rule);}
+  .wx-lead2 a.wx-lead-link:hover h2{color:var(--flag);}
+  .wx-lead2 h2{font-family:var(--font-display);font-weight:700;font-size:23px;line-height:1.2;margin:0 0 10px;text-wrap:balance;color:var(--ink);}
+  .wx-lead2 .dek{font-family:var(--font-display);font-style:italic;font-size:14.5px;line-height:1.42;color:var(--ink-soft);margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid var(--rule);}
+  .wx-lead2 .body{columns:1;font-size:13.5px;line-height:1.58;color:var(--ink);}
+  .wx-lead2 .body p{margin:0 0 12px;}
+
+  /* ---- Boxen ---- */
+  .wx-box{border:1.5px solid var(--ink);margin-bottom:26px;}
+  .wx-box-head{background:var(--flag);color:var(--flag-ink);font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;}
+  .wx-box--dark .wx-box-head{background:var(--box-navy);color:var(--box-navy-ink);}
+  .wx-box-body{padding:6px 16px 4px;}
+  .wx-tickrow{display:flex;flex-direction:column;padding:11px 0;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;}
+  .wx-tickrow:last-child{border-bottom:none;}
+  .wx-tickrow .t-head{font-family:var(--font-display);font-weight:700;font-size:13.5px;line-height:1.32;margin-bottom:3px;}
+  .wx-tickrow .t-dek{font-size:11px;color:var(--ink-soft);line-height:1.4;}
+  a.wx-tickrow:hover .t-head{color:var(--flag);}
+
+  /* ---- Anspieltipp: schlanke Box (dunkles Navy, orangener Button, Querformat) ----
+     2026-07-16: Button-Look von der Home übernommen — Würfel 49px oben rechts, darunter der rote
+     Lyrics-Button 30px, zueinander zentriert. Der Plattenspieler der Home bleibt bewusst DRAUSSEN
+     (Nutzer-Entscheidung): der Newsletter behält seinen ruhigen Zeitungscharakter, hier steht auf
+     allen Geräten derselbe schlanke Player.
+     Beide Buttons sind absolut in .wx-box--dark verankert, weil sie Zeilen überspannen: der Würfel
+     reicht hoch bis neben die Kopfzeile, der rote Button runter bis neben "hitjourney.com".
+     Anker (am gerenderten Newsletter gemessen, Bezugspunkte wie auf der Home):
+       Würfel  top:13.93px   -> Mitte mittig zwischen Baseline der Kopfzeile und Oberkante der
+                                Songtitel-Grossbuchstaben (Cap-Höhe der Schrift, songunabhängig)
+       Rot     bottom:22.5px -> Unterkante = Baseline von "hitjourney.com"
+     Die Werte sind mit der Home identisch, weil vertikale Paddings (8/8, 16/16, 0/20), Schrift-
+     größen und Schriftfamilien in beiden Dateien übereinstimmen (--font-display ist dieselbe
+     Georgia-Kette; --font-sans fällt mangels geladenem Satoshi auf -apple-system zurück).
+     min-height ersetzt die Höhe, die vorher der 60px-Würfel im Fluss erzeugt hat — ohne sie
+     schrumpft die Box, sobald die Buttons absolut sind. */
+  .wx-box--dark{border-color:var(--box-navy);background:var(--box-navy);color:var(--box-navy-ink);position:relative;}
+  .wx-box--dark .wx-box-head{background:var(--box-navy);color:var(--box-navy-ink);padding-left:16px;padding-right:77px;}
+  .wx-anspiel{display:flex;align-items:center;padding:16px 77px 16px 16px;min-height:87px;}
+  .wx-play-btn{width:40px;height:40px;margin-right:16px;border-radius:50%;background:var(--flag);border:0;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
+  .wx-play-btn:active{transform:scale(.92);}
+  .wx-play-btn svg{width:20px;height:20px;color:var(--box-navy);}
+  .wx-play-btn .icon-pause{display:none;}
+  .wx-play-btn.is-playing .icon-play{display:none;}
+  .wx-play-btn.is-playing .icon-pause{display:block;}
+  .wx-anspiel-txt{flex:1 1 auto;min-width:0;font-size:12.5px;line-height:1.4;color:#CBD3E0;}
+  .wx-anspiel-txt b{display:block;color:#fff;font-family:var(--font-display);font-size:15px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .wx-anspiel-txt span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .wx-random-btn{position:absolute;right:16px;top:13.93px;width:49px;height:49px;border:0;padding:0;cursor:pointer;background:transparent;overflow:visible;}
+  .wx-random-btn img{width:100%;height:100%;display:block;}
+  .wx-random-btn:active{transform:scale(.92);}
+  .wx-deck-red-btn{position:absolute;right:25.5px;bottom:22.5px;width:30px;height:30px;border:0;border-radius:50%;background:#C90019;cursor:pointer;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 2px 6px rgba(0,0,0,.4);padding:0;}
+  .wx-deck-red-btn:active{transform:scale(.92);}
+  .wx-anspiel-link{display:block;padding:0 77px 20px 16px;font-family:var(--font-sans);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9FD8EA;}
+  .wx-anspiel-link:hover{text-decoration:underline;}
+  /* Cover/Lyrics-Betrachter, öffnet sich per rotem Button — 1:1 die Funktion aus der Home */
+  .wx-deck-viewer{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(6,20,32,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;}
+  .wx-deck-viewer.active{display:flex;}
+  .wx-deck-viewer img{max-width:min(88vw,72vh);max-height:82vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.7);background:#050505;}
+  .wx-deck-viewer-label{position:absolute;left:0;right:0;top:24px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(159,216,234,.75);pointer-events:none;}
+
+  /* ================= RUBRIK-KOPF ================= */
+  .wx-rubric{
+    break-inside:avoid;break-after:avoid;
+    display:flex;align-items:baseline;gap:8px;
+    font-family:var(--font-sans);font-weight:700;font-style:normal;
+    font-size:14px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--flag);
+    margin:26px 0 14px;padding-bottom:8px;
+    border-bottom:1px solid var(--ink);
+  }
+  .wx-rubric:first-child{margin-top:0;}
+  .wx-rubric .dot{color:var(--flag);font-size:10px;}
+  /* "Am Rande" sitzt in der Leitartikel-Spalte, oberhalb der 5er-Reihe, ohne Spaltenfluss-Kontext */
+  .wx-lead .wx-rubric{margin-top:22px;padding-top:20px;border-top:1px solid var(--rule);}
+
+  /* ================= SPALTENFLUSS ================= */
+  .wx-columns{columns:3;column-gap:34px;column-rule:1px solid var(--rule);border-top:3px double var(--rule-strong);padding-top:26px;margin-top:18px;}
+  @media (max-width:940px){ .wx-columns{columns:2;} }
+  @media (max-width:600px){ .wx-columns{columns:1;} }
+
+  /* Digest-Items: 3 kompakte Meldungen pro Rubrik, Ueberschrift+Text komplett verlinkt */
+  a.wx-digest-item{display:block;break-inside:avoid;margin:0 0 12px;padding-bottom:11px;border-bottom:1px solid var(--rule);}
+  a.wx-digest-item:last-of-type{border-bottom:none;}
+  a.wx-digest-item:hover h4{color:var(--flag);}
+  .wx-digest-item h4{font-family:var(--font-display);font-weight:700;font-size:14.5px;line-height:1.3;margin:0 0 3px;color:var(--ink);}
+  .wx-digest-item p{font-size:11.8px;line-height:1.46;color:var(--ink-soft);margin:0;}
+
+  /* Kein Rahmen mehr oben/unten — Zitat sitzt frei, mit gleich grossem Abstand nach oben/unten */
+  .wx-pullquote{column-span:all;text-align:center;max-width:680px;margin:56px auto 56px;padding:0;}
+  .wx-pullquote a{display:block;color:inherit;}
+  .wx-pullquote a:hover p{color:var(--flag);}
+  .wx-pullquote .mark{font-family:var(--font-display);font-size:56px;color:var(--flag);line-height:.4;display:block;margin-bottom:10px;}
+  .wx-pullquote p{font-family:var(--font-display);font-style:italic;font-size:26px;line-height:1.46;color:var(--ink);margin:0 0 12px;text-wrap:balance;}
+  .wx-pullquote .src{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
+
+  /* 2026-07-16: margin-top war -26px und hob damit den 26px-Abstand der Player-Box exakt auf
+     (Abstand 0). Weil .mark mit font-size:56px + line-height:.4 arbeitet, ragt die Glyphe des
+     Anfuehrungszeichens 19,3px ueber ihre Zeilenbox hinaus — sie stand dadurch 16,8px IM Player.
+     +14px ergibt gemessene 23,2px Luft zwischen Player-Unterkante und Glyphen-Oberkante und
+     bleibt damit nah am 26px-Rhythmus der uebrigen Boxen. */
+  .wx-aside-quote{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;margin:14px 0 0;text-align:center;padding:0 6px;}
+  .wx-aside-quote a{display:block;color:inherit;}
+  .wx-aside-quote a:hover p{color:var(--flag);}
+  .wx-aside-quote .mark{font-family:var(--font-display);font-size:56px;color:var(--flag);line-height:.4;display:block;margin-bottom:10px;}
+  .wx-aside-quote p{font-family:var(--font-display);font-style:italic;font-size:26px;line-height:1.46;color:var(--ink);margin:0 0 12px;text-wrap:balance;}
+  .wx-aside-quote .src{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
+
+  /* ================= PODCASTS ================= */
+  .wx-pod-section{border-top:3px double var(--rule-strong);padding-top:22px;margin-top:34px;}
+  .wx-pod-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap;}
+  .wx-pod-eyebrow{font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--flag);}
+  .wx-pod-head h2{font-family:var(--font-display);font-weight:700;font-size:24px;margin:0;color:var(--ink);}
+  .wx-pod-count{margin-left:auto;font-size:11px;color:var(--ink-faint);letter-spacing:.05em;align-self:flex-end;}
+  .wx-pod-dek{font-family:var(--font-display);font-style:italic;font-size:15px;line-height:1.5;color:var(--ink-soft);margin:0 0 22px;max-width:680px;}
+  .wx-pod-sub{display:flex;align-items:baseline;gap:9px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid var(--rule);}
+
+  .wx-wave{flex:none;display:flex;align-items:flex-end;gap:2px;width:16px;height:14px;}
+  .wx-wave i{display:block;width:2.5px;background:var(--flag);border-radius:1px;}
+
+  .wx-fav-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:30px;}
+  @media (max-width:760px){ .wx-fav-strip{grid-template-columns:1fr;gap:16px;} }
+  a.wx-fav-card{display:block;border-left:2px solid var(--flag);padding-left:14px;}
+  a.wx-fav-card:hover h3{color:var(--flag);}
+  .wx-fav-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .wx-fav-show{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft);}
+  .wx-fav-card h3{font-family:var(--font-display);font-weight:700;font-size:16px;line-height:1.28;margin:0 0 5px;color:var(--ink);}
+  .wx-fav-card p{font-size:12px;line-height:1.48;color:var(--ink-soft);margin:0;}
+
+  a.wx-podbar{display:flex;align-items:center;gap:16px;padding:13px 0;border-bottom:1px solid var(--rule);}
+  a.wx-podbar:last-child{border-bottom:none;}
+  a.wx-podbar:hover h3{color:var(--flag);}
+  .wx-pod-mark{flex:none;width:20px;text-align:center;font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--flag);}
+  .wx-pod-show{flex:0 0 172px;line-height:1.3;}
+  .wx-pod-show .name{display:block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);}
+  .wx-pod-show .genre{display:block;font-size:10px;color:var(--ink-faint);margin-top:1px;}
+  .wx-pod-mid{flex:1 1 auto;min-width:0;}
+  .wx-pod-mid h3{font-family:var(--font-display);font-weight:700;font-size:14.5px;line-height:1.25;margin:0 0 2px;color:var(--ink);}
+  .wx-pod-mid p{font-size:11.8px;line-height:1.4;color:var(--ink-soft);margin:0;}
+  @media (max-width:700px){
+    a.wx-podbar{flex-wrap:wrap;}
+    .wx-pod-show{flex:0 0 100%;order:-1;display:flex;gap:8px;align-items:baseline;}
+    .wx-pod-mid{flex:1 1 100%;order:1;margin:2px 0 0;}
+  }
+
+  .wx-footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--rule);text-align:center;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);}
+  .wx-footer .dot{display:inline-block;margin:0 .6em;color:var(--rule);}
+</style>
+
+
+</head>
+<body>
+<div class="wx-root">
+  <div class="wx-wrap">
+
+    <header class="wx-masthead">
+      <h1 class="wx-nameplate">FOLIO<span class="dot">·</span>NEWS</h1>
+      <div class="wx-tagline">Headlines</div>
+      <div class="wx-dateline">
+        <span><b id="wxDate">—</b></span>
+        <span class="mid">Sorgfältig kuratiert für Jörn Kämper</span>
+        <span class="ed" id="wxEdition">—</span>
+      </div>
+    </header>
+
+    <div class="wx-top">
+      <article class="wx-lead" id="wxLeadMount">
+        <p style="font-size:13px;color:var(--ink-faint)">Lade aktuelle Ausgabe …</p>
+      </article>
+
+      <aside>
+        <div class="wx-box">
+          <div class="wx-box-head">Märkte · USA</div>
+          <div class="wx-box-body" id="wxMarketsMount">
+            <div class="wx-tickrow"><div class="t-dek">Lade aktuelle Marktmeldungen …</div></div>
+          </div>
+        </div>
+
+        <div class="wx-box wx-box--dark">
+          <div class="wx-box-head">Songwriter's Picks</div>
+          <div class="wx-anspiel">
+            <button class="wx-play-btn" id="anspielPlayBtn" type="button" aria-label="Abspielen/Pause" title="Abspielen/Pause">
+              <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5.5v13a1 1 0 0 0 1.53.85l10.2-6.5a1 1 0 0 0 0-1.7L9.53 4.65A1 1 0 0 0 8 5.5Z" fill="currentColor"/>
+              </svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="6.5" y="5" width="4" height="14" rx="1.5" fill="currentColor"/>
+                <rect x="13.5" y="5" width="4" height="14" rx="1.5" fill="currentColor"/>
+              </svg>
+            </button>
+            <div class="wx-anspiel-txt"><b id="anspielTitle">—</b><span id="anspielArtist"></span></div>
+          </div>
+          <a class="wx-anspiel-link" href="https://hitjourney.com" target="_blank" rel="noopener">hitjourney.com</a>
+          <button class="wx-random-btn" id="anspielRandomBtn" type="button" aria-label="Zufälligen Song abspielen" title="Zufälligen Song abspielen">
+            <img src="Random.png" alt="" draggable="false">
+          </button>
+          <button class="wx-deck-red-btn" id="anspielDeckSignatureBtn" type="button" aria-label="Cover und Lyrics anzeigen" title="Cover und Lyrics"></button>
+        </div>
+
+        <blockquote class="wx-aside-quote" id="asideQuote" style="display:none">
+          <a href="https://mein-lieber-sohn.de" target="_blank" rel="noopener">
+            <span class="mark">&ldquo;</span>
+            <p id="asideQuoteText"></p>
+            <span class="src" id="asideQuoteSrc"></span>
+          </a>
+        </blockquote>
+      </aside>
+    </div>
+
+    <div class="wx-columns">
+
+      <div id="wxRubrikenMount">
+        <div class="wx-rubric"><span class="dot">◆</span>Wird geladen …</div>
+      </div>
+
+      <blockquote class="wx-pullquote" id="mainQuote" style="display:none">
+        <a href="https://mein-lieber-sohn.de" target="_blank" rel="noopener">
+          <span class="mark">&ldquo;</span>
+          <p id="mainQuoteText"></p>
+          <span class="src" id="mainQuoteSrc"></span>
+        </a>
+      </blockquote>
+
+    </div>
+
+    <section class="wx-pod-section">
+      <div class="wx-pod-head">
+        <span class="wx-pod-eyebrow">🎧 Zum Reinhören</span>
+        <h2>Unsere Podcast-Empfehlungen</h2>
+        <span class="wx-pod-count">3 Favoriten · 6 Tagestipps</span>
+      </div>
+      <p class="wx-pod-dek">Von der Eskalation um die Straße von Hormus bis zum VW-Sparkurs — sechs frische Empfehlungen zu den Themen des Tages, plus drei Dauerbrenner, die immer eine Folge wert sind.</p>
+
+      <div class="wx-pod-sub">Die Dauerbrenner</div>
+      <div class="wx-fav-strip">
+        <a class="wx-fav-card" href="https://open.spotify.com/show/3tMwolVmLPxyXuZPQu26kQ" target="_blank" rel="noopener">
+          <div class="wx-fav-top"><span class="wx-wave"><i style="height:40%"></i><i style="height:90%"></i><i style="height:60%"></i></span><span class="wx-fav-show">The Pioneer Morning Briefing</span></div>
+          <h3>Der tägliche News-Espresso</h3>
+          <p>Steingart &amp; Team ordnen Politik und Wirtschaft — jeden Morgen in 20 Minuten.</p>
+        </a>
+        <a class="wx-fav-card" href="https://open.spotify.com/show/0ivn4wyUBScv57XS8vbVaa" target="_blank" rel="noopener">
+          <div class="wx-fav-top"><span class="wx-wave"><i style="height:70%"></i><i style="height:30%"></i><i style="height:95%"></i></span><span class="wx-fav-show">Hotel Matze</span></div>
+          <h3>Große Namen, ganz offen</h3>
+          <p>Matze Hielscher im langen, persönlichen Gespräch — Kult unter den Interview-Podcasts.</p>
+        </a>
+        <a class="wx-fav-card" href="https://open.spotify.com/show/4bGWMQA1ANGTgcysDo14aX" target="_blank" rel="noopener">
+          <div class="wx-fav-top"><span class="wx-wave"><i style="height:55%"></i><i style="height:95%"></i><i style="height:45%"></i></span><span class="wx-fav-show">Lanz + Precht</span></div>
+          <h3>Der Freitags-Disput fürs Denken</h3>
+          <p>Markus Lanz und Richard David Precht streiten sich wöchentlich durch die großen Fragen der Zeit.</p>
+        </a>
+      </div>
+
+      <div class="wx-pod-sub">Tagestipps</div>
+
+      <div id="wxPodcastsMount"></div>
+    </section>
+
+    <p class="wx-footer">joern-kaemper.de</p>
+
+  </div>
+</div>
+
+<div class="wx-deck-viewer" id="wxDeckViewer" aria-hidden="true">
+  <div class="wx-deck-viewer-label" id="wxDeckViewerLabel">Cover</div>
+  <img alt="" id="wxDeckViewerImg" src=""/>
+</div>
+
+<script>
+(function(){
+  // Headlines-Inhalt kommt jetzt live aus Supabase (Worker "wax-entwicklungen" schreibt
+  // 2x/Tag nach `wax_headlines`, Worker "wax-cnbc" nach `cnbc_news`) — kein Git-Commit/
+  // Seiten-Deploy pro Ausgabe mehr noetig. Player und Zitate weiter unten bleiben unangetastet.
+  const SB_URL = 'https://ywfpzdniicfrhnrvfqfe.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3ZnB6ZG5paWNmcmhucnZmcWZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0Mjc4ODcsImV4cCI6MjA5MTAwMzg4N30.St-f48-kfbmlN_QlAKtv-JbbLQYu5IaPmiPO7pyYQ9A';
+  const RUBRIK_LABELS = { politik:'Politik', wirtschaft:'Wirtschaft', tech:'Tech & Digital', sport:'Sport', wissen:'Wissen', kultur:'Leben & Kultur', talk:'Talk of Town' };
+  const RUBRIK_ORDER = ['politik','wirtschaft','tech','sport','wissen','kultur','talk'];
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  function renderDateline(){
+    const now = new Date();
+    const dateEl = document.getElementById('wxDate');
+    const edEl = document.getElementById('wxEdition');
+    if(dateEl) dateEl.textContent = new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(now);
+    if(edEl){
+      const hour = now.getHours();
+      const ref = new Date(now);
+      let suffix;
+      if(hour < 6){ ref.setDate(ref.getDate()-1); suffix = 2; }
+      else if(hour < 18){ suffix = 1; }
+      else { suffix = 2; }
+      const startOfYear = new Date(ref.getFullYear(), 0, 0);
+      const dayOfYear = Math.floor((ref - startOfYear) / 86400000);
+      edEl.textContent = 'Ausgabe Nr. ' + dayOfYear + '-' + suffix;
+    }
+  }
+
+  function leadHTML(payload){
+    const l = payload.leitartikel, l2 = payload.lead2, cards = payload.finanzCards || [];
+    const bodyP = (arr, dropcap) => (arr||[]).map((p,i)=>{
+      if(i===0 && dropcap && p.length){ return '<p><span class="dropcap">'+esc(p[0])+'</span>'+esc(p.slice(1))+'</p>'; }
+      return '<p>'+esc(p)+'</p>';
+    }).join('');
+    let html = '';
+    if(l && l.h1){
+      html += '<span class="wx-kicker">'+esc(l.kicker||'Leitartikel')+'</span>'
+        + '<a class="wx-lead-link" href="'+esc(l.url||'#')+'" target="_blank" rel="noopener">'
+        + '<h1>'+esc(l.h1)+'</h1>'
+        + (l.dek ? '<p class="dek">'+esc(l.dek)+'</p>' : '')
+        + '<div class="body">'+bodyP(l.body, true)+'</div>'
+        + '</a>';
+    }
+    if(cards.length){
+      html += '<div class="wx-rubric"><span class="dot">◆</span>Finanzen · Börse</div><div class="wx-hl-row">'
+        + cards.map(c => '<a class="wx-hl-card" href="'+esc(c.url||'#')+'" target="_blank" rel="noopener"><h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p></a>').join('')
+        + '</div>';
+    }
+    if(l2 && l2.h2){
+      html += '<article class="wx-lead2"><span class="wx-kicker">'+esc(l2.kicker||'')+'</span>'
+        + '<a class="wx-lead-link" href="'+esc(l2.url||'#')+'" target="_blank" rel="noopener">'
+        + '<h2>'+esc(l2.h2)+'</h2>'
+        + (l2.dek ? '<p class="dek">'+esc(l2.dek)+'</p>' : '')
+        + '<div class="body">'+bodyP(l2.body, false)+'</div>'
+        + '</a></article>';
+    }
+    return html;
+  }
+
+  function marketsHTML(items){
+    if(!items || !items.length) return '<div class="wx-tickrow"><div class="t-dek">Zurzeit keine Marktmeldungen verfügbar.</div></div>';
+    return items.map(it => '<a class="wx-tickrow" href="'+esc(it.url||'#')+'" target="_blank" rel="noopener"><div class="t-head">'+esc(it.title)+'</div></a>').join('');
+  }
+
+  function rubrikenHTML(rubriken){
+    if(!rubriken) return '';
+    return RUBRIK_ORDER.map(key => {
+      const items = rubriken[key] || [];
+      if(!items.length) return '';
+      return '<div class="wx-rubric"><span class="dot">◆</span>'+esc(RUBRIK_LABELS[key])+'</div>'
+        + items.map(it => '<a class="wx-digest-item" href="'+esc(it.url||'#')+'" target="_blank" rel="noopener"><h4>'+esc(it.h)+'</h4><p>'+esc(it.p)+'</p></a>').join('');
+    }).join('');
+  }
+
+  function podcastsHTML(podcasts){
+    if(!podcasts || !podcasts.length) return '';
+    return podcasts.map((p,i) => '<a class="wx-podbar" href="'+esc(p.url||'#')+'" target="_blank" rel="noopener">'
+      + '<span class="wx-pod-mark">'+(i+1)+'</span>'
+      + '<span class="wx-pod-show"><span class="name">'+esc(p.s)+'</span><span class="genre">'+esc(p.genre)+'</span></span>'
+      + '<div class="wx-pod-mid"><h3>'+esc(p.h)+'</h3><p>'+esc(p.p)+'</p></div>'
+      + '</a>').join('');
+  }
+
+  async function ladeHeadlines(){
+    renderDateline();
+    const headers = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+    try{
+      const [hlRes, cnbcRes] = await Promise.all([
+        fetch(SB_URL + '/rest/v1/wax_headlines?select=payload&order=stand.desc&limit=1', { headers }),
+        fetch(SB_URL + '/rest/v1/cnbc_news?select=items&order=stand.desc&limit=1', { headers }),
+      ]);
+      if(hlRes.ok){
+        const rows = await hlRes.json();
+        const payload = rows && rows[0] && rows[0].payload;
+        const leadMount = document.getElementById('wxLeadMount');
+        const rubMount = document.getElementById('wxRubrikenMount');
+        const podMount = document.getElementById('wxPodcastsMount');
+        if(payload){
+          if(leadMount) leadMount.innerHTML = leadHTML(payload);
+          if(rubMount) rubMount.innerHTML = rubrikenHTML(payload.rubriken);
+          if(podMount) podMount.innerHTML = podcastsHTML(payload.podcasts);
+        } else {
+          if(leadMount) leadMount.innerHTML = '<p style="font-size:13px;color:var(--ink-faint)">Noch keine Ausgabe verfügbar.</p>';
+        }
+      }
+      if(cnbcRes.ok){
+        const rows = await cnbcRes.json();
+        const items = rows && rows[0] && rows[0].items;
+        const marketsMount = document.getElementById('wxMarketsMount');
+        if(marketsMount) marketsMount.innerHTML = marketsHTML(items);
+      }
+    }catch(e){
+      const leadMount = document.getElementById('wxLeadMount');
+      if(leadMount) leadMount.innerHTML = '<p style="font-size:13px;color:var(--ink-faint)">Inhalt konnte nicht geladen werden — bitte Seite neu laden.</p>';
+    }
+  }
+  ladeHeadlines();
+})();
+</script>
+
+<script>
+(function(){
+  const HJ_SB_URL = 'https://ywfpzdniicfrhnrvfqfe.supabase.co';
+  const HJ_SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3ZnB6ZG5paWNmcmhucnZmcWZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0Mjc4ODcsImV4cCI6MjA5MTAwMzg4N30.St-f48-kfbmlN_QlAKtv-JbbLQYu5IaPmiPO7pyYQ9A';
+  const HJ_STATE_KEY = 'folioHitjourneyState';
+  let songs = [], idx = -1, audio = null, loaded = false;
+
+  // Erkennt, ob die App (auf diesem oder einem anderen Tab/derselben Seite) in den letzten
+  // Sekunden noch aktiv lief — z.B. weil man gerade von Home zu Headlines gewechselt hat.
+  // Nur dann wird die zuletzt gehoerte Position fortgesetzt; nach echtem Schliessen und
+  // spaeterem Neuoeffnen der App (Heartbeat laengst verstummt) startet stattdessen unten
+  // ein neuer Zufallssong.
+  const HJ_HEARTBEAT_KEY = 'folioHitjourneyHeartbeat';
+  let __hjWasRecentlyActive = false;
+  try{
+    const lastBeat = Number(localStorage.getItem(HJ_HEARTBEAT_KEY) || 0);
+    __hjWasRecentlyActive = (Date.now() - lastBeat) < 8000;
+  }catch(e){}
+  function hjBeat(){ try{ localStorage.setItem(HJ_HEARTBEAT_KEY, String(Date.now())); }catch(e){} }
+  hjBeat();
+  setInterval(hjBeat, 4000);
+
+  let currentSong = null;
+  function showSong(song){
+    currentSong = song;
+    const t = document.getElementById('anspielTitle');
+    const a = document.getElementById('anspielArtist');
+    if(t) t.textContent = song.title || '—';
+    if(a) a.textContent = song.artist || '';
+  }
+  function setPlayIcon(playing){
+    const btn = document.getElementById('anspielPlayBtn');
+    if(btn) btn.classList.toggle('is-playing', playing);
+  }
+  function saveState(){
+    if(idx < 0 || !songs.length) return;
+    try{
+      localStorage.setItem(HJ_STATE_KEY, JSON.stringify({
+        slug: songs[idx].slug,
+        currentTime: audio ? audio.currentTime : 0,
+        paused: audio ? audio.paused : true,
+        ts: Date.now()
+      }));
+    }catch(e){}
+  }
+  let __lastSave = 0;
+  function saveStateThrottled(){
+    const now = Date.now();
+    if(now - __lastSave > 3000){ __lastSave = now; saveState(); }
+  }
+  function ensureAudio(){
+    if(audio) return audio;
+    audio = new Audio();
+    audio.addEventListener('play', () => { setPlayIcon(true); saveState(); });
+    audio.addEventListener('pause', () => { setPlayIcon(false); saveState(); });
+    audio.addEventListener('timeupdate', saveStateThrottled);
+    // Nach Songende laeuft die Playlist automatisch in Zufallswiedergabe weiter.
+    audio.addEventListener('ended', () => playRandom());
+    return audio;
+  }
+  // iOS/Safari blockiert programmatisches play() nach einer Seitennavigation (kein
+  // synchroner User-Gesture-Kontext mehr) — au.play() liefert dann eine rejected Promise.
+  // Fallback: beim naechsten Tap/Klick/Tastendruck irgendwo auf der Seite automatisch
+  // fortsetzen, statt dass der Nutzer gezielt den Play-Button treffen muss.
+  function tryResumePlay(au){
+    const p = au.play();
+    if(p && p.catch){
+      p.catch(() => {
+        let done = false;
+        const events = ['touchend','click','keydown'];
+        // Wenn der naechste Tap gezielt der Play-/Zufalls-Button ist, soll togglePlayPause()
+        // ihn allein steuern (sonst Race: dieser Fallback startet die Wiedergabe, und der
+        // Button-eigene Klick-Handler pausiert sie im selben Zug wieder, weil au.paused
+        // durch den Fallback bereits synchron auf false gesprungen ist).
+        const resume = (e) => {
+          if(done || !au.paused) return;
+          if(e && e.target && e.target.closest && e.target.closest('#anspielPlayBtn,#anspielRandomBtn')) return;
+          done = true;
+          events.forEach(ev => document.removeEventListener(ev, resume));
+          au.play().catch(()=>{});
+        };
+        events.forEach(ev => document.addEventListener(ev, resume, { passive:true }));
+      });
+    }
+  }
+  function playSong(song){
+    showSong(song);
+    const au = ensureAudio();
+    au.src = song.mp3_url; au.currentTime = 0;
+    loaded = true;
+    au.play().catch(()=>{});
+    saveState();
+  }
+  function togglePlayPause(){
+    if(!songs.length) return;
+    if(!loaded){ playSong(songs[idx]); return; }
+    const au = ensureAudio();
+    if(au.paused){ au.play().catch(()=>{}); } else { au.pause(); }
+  }
+  function playRandom(){
+    if(!songs.length) return;
+    if(songs.length > 1){
+      let n; do{ n = Math.floor(Math.random()*songs.length); }while(n===idx);
+      idx = n;
+    } else { idx = 0; }
+    playSong(songs[idx]);
+  }
+  window.addEventListener('pagehide', saveState);
+  window.addEventListener('beforeunload', saveState);
+
+  (async function init(){
+    try{
+      const headers = { apikey: HJ_SB_ANON, Authorization: 'Bearer ' + HJ_SB_ANON };
+      const tracksRes = await fetch(HJ_SB_URL + '/rest/v1/playlist_tracks?select=song_slug,position&playlist_slug=eq.songwriters-picks&order=position.asc', { headers });
+      if(!tracksRes.ok) return;
+      const tracks = await tracksRes.json();
+      if(!Array.isArray(tracks) || !tracks.length) return;
+      const orderedSlugs = tracks.map(t => t.song_slug);
+      const slugList = orderedSlugs.map(s=>'"'+s+'"').join(',');
+      const url = HJ_SB_URL + '/rest/v1/songs?select=slug,title,artist,mp3_url,cover_url,lyrics_url&slug=in.(' + slugList + ')';
+      const res = await fetch(url, { headers });
+      if(!res.ok) return;
+      const raw = await res.json();
+      if(!Array.isArray(raw) || !raw.length) return;
+      const bySlug = {};
+      raw.forEach(s => bySlug[s.slug] = s);
+      songs = orderedSlugs.map(slug => bySlug[slug]).filter(Boolean);
+      if(!songs.length) return;
+
+      // Laufende Wiedergabe von der anderen Folio.wax-Seite (Home/Headlines) übernehmen,
+      // statt neu von vorn/zufällig zu starten.
+      let resumed = false;
+      let st = null;
+      try{
+        const raw2 = localStorage.getItem(HJ_STATE_KEY);
+        if(raw2) st = JSON.parse(raw2);
+        if(st && st.slug && __hjWasRecentlyActive){
+          const foundIdx = songs.findIndex(s => s.slug === st.slug);
+          if(foundIdx !== -1){
+            idx = foundIdx;
+            showSong(songs[idx]);
+            const au = ensureAudio();
+            const resumeTime = st.currentTime || 0;
+            const wasPlaying = !st.paused;
+            au.src = songs[idx].mp3_url;
+            loaded = true;
+            au.addEventListener('loadedmetadata', function onMeta(){
+              // Falls die gespeicherte Position zu nah am Songende liegt, wuerde das
+              // Anspringen dieser Stelle sofort ein 'ended' ausloesen und ungewollt zu
+              // einem zufaelligen naechsten Song weiterspringen, statt den angezeigten
+              // Song abzuspielen — in dem Fall lieber von vorn beginnen.
+              const dur = au.duration;
+              au.currentTime = (isFinite(dur) && dur > 0 && resumeTime >= dur - 1.5) ? 0 : resumeTime;
+              au.removeEventListener('loadedmetadata', onMeta);
+              if(wasPlaying) tryResumePlay(au);
+            });
+            resumed = true;
+          }
+        }
+      }catch(e){}
+      if(!resumed){
+        // Echter Neustart der App (kein Tab/keine Seite lief in den letzten Sekunden) —
+        // frischer Zufallssong statt der zuletzt gehoerten Position; wiederholt nach
+        // Moeglichkeit nicht direkt denselben Titel wie beim letzten Mal.
+        let n = Math.floor(Math.random() * songs.length);
+        if(songs.length > 1 && st && st.slug){
+          const prevIdx = songs.findIndex(s => s.slug === st.slug);
+          if(prevIdx === n) n = (n + 1) % songs.length;
+        }
+        idx = n;
+        showSong(songs[idx]);
+      }
+
+      const playBtn = document.getElementById('anspielPlayBtn');
+      if(playBtn) playBtn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        togglePlayPause();
+      });
+      const randomBtn = document.getElementById('anspielRandomBtn');
+      if(randomBtn) randomBtn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        playRandom();
+      });
+
+      // Roter Button: 1. Klick zeigt Cover, 2. Klick Lyrics, danach schliesst ein weiterer
+      // Klick (auf den Button oder irgendwo im Viewer) — 1:1 die Funktion aus der Home.
+      let deckViewerPhase = 0;
+      const deckViewer = document.getElementById('wxDeckViewer');
+      const deckViewerImg = document.getElementById('wxDeckViewerImg');
+      const deckViewerLabel = document.getElementById('wxDeckViewerLabel');
+      function closeDeckViewer(){
+        deckViewerPhase = 0;
+        if(deckViewer){ deckViewer.classList.remove('active'); deckViewer.setAttribute('aria-hidden','true'); }
+        if(deckViewerImg) deckViewerImg.removeAttribute('src');
+      }
+      function advanceDeckViewer(){
+        if(!currentSong) return;
+        if(deckViewerPhase === 0 && currentSong.cover_url){
+          deckViewerPhase = 1;
+          deckViewerImg.src = currentSong.cover_url;
+          deckViewerLabel.textContent = 'Cover';
+          deckViewer.classList.add('active');
+          deckViewer.setAttribute('aria-hidden','false');
+        } else if(deckViewerPhase <= 1 && currentSong.lyrics_url){
+          deckViewerPhase = 2;
+          deckViewerImg.src = currentSong.lyrics_url;
+          deckViewerLabel.textContent = 'Lyrics';
+          deckViewer.classList.add('active');
+          deckViewer.setAttribute('aria-hidden','false');
+        } else {
+          closeDeckViewer();
+        }
+      }
+      const deckSignatureBtn = document.getElementById('anspielDeckSignatureBtn');
+      if(deckSignatureBtn) deckSignatureBtn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        advanceDeckViewer();
+      });
+      if(deckViewer) deckViewer.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        advanceDeckViewer();
+      });
+    }catch(e){ /* Netzwerk — Titel bleibt leer */ }
+  })();
+})();
+
+(async function(){
+  // Zwei Zitate aus dem echten Fundus von mein-lieber-sohn.de (data/quotes.json),
+  // zufällig gezogen und nach Länge gefiltert statt gekürzt, damit sie in die
+  // jeweilige Kartenhöhe passen — gleiche Logik wie renderDiscoverQuotes() in index.html.
+  try{
+    const res = await fetch('https://mein-lieber-sohn.de/data/quotes.json');
+    if(!res.ok) return;
+    const quotes = await res.json();
+    if(!Array.isArray(quotes) || quotes.length < 2) return;
+    const pool = quotes.filter(q => /pin/.test(q.classes || '') && q.de && q.de.length <= 110);
+    if(pool.length < 2) return;
+    const idx1 = Math.floor(Math.random() * pool.length);
+    let idx2 = Math.floor(Math.random() * pool.length);
+    while(idx2 === idx1) idx2 = Math.floor(Math.random() * pool.length);
+    fillQuote('mainQuote', pool[idx1]);
+    fillQuote('asideQuote', pool[idx2]);
+  }catch(e){ /* Netzwerk/CORS — Zitat-Karten bleiben ausgeblendet */ }
+
+  function fillQuote(id, q){
+    const el = document.getElementById(id);
+    const textEl = document.getElementById(id + 'Text');
+    const srcEl = document.getElementById(id + 'Src');
+    if(!el || !textEl || !srcEl || !q) return;
+    textEl.textContent = q.de;
+    srcEl.textContent = (q.author_de || 'Unbekannt') + ' · mein-lieber-sohn.de';
+    el.style.display = '';
+  }
+})();
+</script>
+
+</body>
+</html>
